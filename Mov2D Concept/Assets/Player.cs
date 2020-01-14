@@ -14,7 +14,6 @@ public class Player : MonoBehaviour
             StartCoroutine(MoverJugador());
             seleccion.seleccion = 2;
         }
-        print("as");
     }
 
     public IEnumerator MoverJugador()
@@ -22,9 +21,13 @@ public class Player : MonoBehaviour
         for (int i = 0; i < baldosas.baldosasSeleccionadas.ToArray().Length; i++)
         {
             transform.position = baldosas.baldosasSeleccionadas[i].transform.position;
+            baldosas.baldosasSeleccionadas[i].transform.GetComponent<Baldosa>().color = Colores.Ninguno;
+            Destroy(baldosas.baldosasSeleccionadas[i].transform.GetChild(0).gameObject);
             yield return new WaitForSeconds(0.5f);
         }
         seleccion.seleccion = 0;
         baldosas.baldosasSeleccionadas = new List<Baldosa>();
+        baldosas.ComprobarCasillas();
+
     }
 }

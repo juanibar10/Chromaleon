@@ -8,37 +8,28 @@ public enum Colores
     Azul,
     Rojo,
     Verde,
-    Amarillo,
+    Ninguno,
 }
 
 public class Baldosa : MonoBehaviour
 {
-    public GameObject enemigo;
     public bool contieneEnemigo;
     public bool contienePlayer;
     public bool seleccionada;
     public Colores color;
 
     public List<GameObject> adjacentObjects = new List<GameObject>();
+    public GameObject upObject;
 
     private void Awake()
     {
-        enemigo = transform.GetChild(0).gameObject;
         getNearbyObjecs(1.2f);
+        getDownObject();
+        color = transform.GetComponentInChildren<Hoja>().color;
     }
-    
 
     private void Update()
     {
-        if (!contieneEnemigo && enemigo != null)
-        {
-            enemigo = null;
-            Destroy(transform.GetChild(0).gameObject);
-        }
-
-        if (contienePlayer)
-            contieneEnemigo = false;
-
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -46,9 +37,17 @@ public class Baldosa : MonoBehaviour
         if (collision.tag == "Seleccion")
         {
             seleccionada = true;
-            print("a");
         }
+        if (collision.tag == "Player")
+            contienePlayer = true;
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Player")
+            contienePlayer = false;
+    }
+
 
     void getNearbyObjecs(float radius)
     {
@@ -56,9 +55,22 @@ public class Baldosa : MonoBehaviour
         int i = 0;
         while (i < hitColliders.Length)
         {
-            if(hitColliders[i].gameObject.name != name && hitColliders[i].tag == "Centro")
+            if (hitColliders[i].gameObject.name != name && hitColliders[i].tag == "Centro")
                 adjacentObjects.Add(hitColliders[i].gameObject);
             i++;
         }
     }
+
+    void getDownObject()
+    {
+        Collider[] hitCollider = Physics.OverlapBox(new Vector3(transform.position.x + 1, transform.position.y, transform.position.z), new Vector3(0.5f, 0.5f, 0.5f));
+        int i = 0;
+        while (i < hitCollider.Length)
+        {
+            if (hitCollider[i].gameObject.name != name && hitCollider[i].tag == "Centro")
+                upObject = hitCollider[i].gameObject;
+            i++;
+        }
+    }
+
 }

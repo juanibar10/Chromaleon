@@ -32,7 +32,7 @@ public class Seleccion : MonoBehaviour
                         {
                             foreach (var item in baldosaActual.adjacentObjects)
                             {
-                                if (hit.transform.name == item.name)
+                                if (hit.transform.name == item.name && hit.transform.gameObject.GetComponent<Baldosa>().color != Colores.Ninguno)
                                 {
                                     objeto = Instantiate(objetoSeleccion, hit.transform.position, Quaternion.identity);
                                     baldosaActual = hit.transform.gameObject.GetComponent<Baldosa>();
@@ -56,7 +56,7 @@ public class Seleccion : MonoBehaviour
                         if (hit.transform.tag == "Centro" && baldosaActual.color == hit.transform.gameObject.GetComponent<Baldosa>().color && baldosaActual.adjacentObjects.Contains(hit.transform.gameObject) && !managerBaldosas.baldosasSeleccionadas.Contains(hit.transform.gameObject.GetComponent<Baldosa>()))
                         {
                             objeto.transform.position = hit.transform.position;
-                            baldosaActual = hit.transform.gameObject.GetComponent<Baldosa>();
+                            baldosaActual = hit.transform.gameObject.GetComponent<Baldosa>(); 
                         }
                     }
                 }
@@ -64,6 +64,7 @@ public class Seleccion : MonoBehaviour
                 {
                     seleccion = 1;
                     seleccionando = false;
+                    managerBaldosas.baldosasSeleccionadas[managerBaldosas.baldosasSeleccionadas.ToArray().Length - 1].color = Colores.Ninguno;
                 }
             }
         }

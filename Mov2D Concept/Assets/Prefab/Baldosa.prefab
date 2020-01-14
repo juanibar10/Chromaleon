@@ -107,11 +107,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c6e55337cde2c7468f0bc52e6f3150b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemigo: {fileID: 0}
   contieneEnemigo: 1
   contienePlayer: 0
   seleccionada: 0
+  color: 2
   adjacentObjects: []
+  upObject: {fileID: 0}
 --- !u!1 &4886764219457447590
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,6 +124,7 @@ GameObject:
   - component: {fileID: 5042819004992656394}
   - component: {fileID: 758005875422826803}
   - component: {fileID: 5104294990036654251}
+  - component: {fileID: 1106648192}
   m_Layer: 8
   m_Name: Sphere
   m_TagString: Untagged
@@ -191,3 +193,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &1106648192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4886764219457447590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 117a012f8fb4fec4e8c04874560f4e0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: 0
+  material:
+  - {fileID: 2100000, guid: 23fd93ae0862afc4aa32885719980457, type: 2}
+  - {fileID: 2100000, guid: 9036758fb51af384eab27916b73eba62, type: 2}
+  - {fileID: 2100000, guid: 0d79b07efb7dd8848a2fbcc713fd4b6e, type: 2}

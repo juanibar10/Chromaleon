@@ -904,6 +904,7 @@ MonoBehaviour:
   - {fileID: 15302463}
   seleccion: {fileID: 1818565453}
   baldosasSeleccionadas: []
+  todasLlenas: 0
 --- !u!4 &206241780
 Transform:
   m_ObjectHideFlags: 0
@@ -2436,6 +2437,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 206241780}
     m_Modifications:
+    - target: {fileID: 1106648192, guid: 94b1d789e32a382449994cd36d120b11, type: 3}
+      propertyPath: color
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 102165854505840944, guid: 94b1d789e32a382449994cd36d120b11,
         type: 3}
       propertyPath: contieneEnemigo
@@ -2444,7 +2449,7 @@ PrefabInstance:
     - target: {fileID: 102165854505840944, guid: 94b1d789e32a382449994cd36d120b11,
         type: 3}
       propertyPath: color
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1200382311225503117, guid: 94b1d789e32a382449994cd36d120b11,
         type: 3}
@@ -4994,7 +4999,7 @@ GameObject:
   - component: {fileID: 1305333917}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5469,10 +5474,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 206241780}
     m_Modifications:
+    - target: {fileID: 1106648192, guid: 94b1d789e32a382449994cd36d120b11, type: 3}
+      propertyPath: color
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 102165854505840944, guid: 94b1d789e32a382449994cd36d120b11,
         type: 3}
       propertyPath: color
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1200382311225503117, guid: 94b1d789e32a382449994cd36d120b11,
         type: 3}
