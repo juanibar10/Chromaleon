@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
             StartCoroutine(MoverJugador());
             seleccion.seleccion = 2;
         }
+        print("as");
     }
 
     public IEnumerator MoverJugador()
