@@ -1655,6 +1655,7 @@ MonoBehaviour:
   seleccion: {fileID: 1818565453}
   baldosasSeleccionadas: []
   todasLlenas: 0
+  linea: {fileID: 0}
 --- !u!4 &206241780
 Transform:
   m_ObjectHideFlags: 0
@@ -3459,6 +3460,16 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7296938374176853737, guid: 94b1d789e32a382449994cd36d120b11,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7296938374176853737, guid: 94b1d789e32a382449994cd36d120b11,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94b1d789e32a382449994cd36d120b11, type: 3}
 --- !u!1 &519420028
@@ -3707,6 +3718,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7296938374176853737, guid: 94b1d789e32a382449994cd36d120b11,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7296938374176853737, guid: 94b1d789e32a382449994cd36d120b11,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7296938374176853737, guid: 94b1d789e32a382449994cd36d120b11,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7296938374176853737, guid: 94b1d789e32a382449994cd36d120b11,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94b1d789e32a382449994cd36d120b11, type: 3}

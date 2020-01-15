@@ -14,6 +14,8 @@ public class ManagerBaldosas : MonoBehaviour
     //True si todas estan llenas de algun enemigo, pieza o player
     public bool todasLlenas = true;
 
+    public LineRenderer linea;
+
 
     private void Update()
     {
@@ -23,7 +25,27 @@ public class ManagerBaldosas : MonoBehaviour
             foreach (var item in baldosas)
             {
                 if (item.seleccionada && !baldosasSeleccionadas.Contains(item))
+                {
                     baldosasSeleccionadas.Add(item);
+
+                    if(linea.positionCount > 1)
+                    {
+                        linea.positionCount = baldosasSeleccionadas.ToArray().Length +1;
+                        linea.SetPosition(baldosasSeleccionadas.ToArray().Length, new Vector3(baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.x, baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.y + 0.2f, baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.z));
+                    }
+                    else if(linea.positionCount == 0)
+                    {
+                        linea.positionCount = 2;
+                        foreach (var baldosa in baldosas)
+                        {
+                            if (baldosa.contienePlayer)
+                                linea.SetPosition(0, new Vector3(baldosa.transform.position.x,baldosa.transform.position.y + 0.2f,baldosa.transform.position.z));
+                        }
+                        linea.SetPosition(1, new Vector3(baldosasSeleccionadas.ToArray()[0].transform.position.x, baldosasSeleccionadas.ToArray()[0].transform.position.y + 0.2f, baldosasSeleccionadas.ToArray()[0].transform.position.z));
+                    }
+
+                    
+                }
             }
         }
         //seleccion = 1, en este estado es el movimiento del player, y se resetean todas las booleanas a seleccionada = false
@@ -34,6 +56,11 @@ public class ManagerBaldosas : MonoBehaviour
                 item.seleccionada = false;
             }
         }
+    }
+
+    public void AsignarLinea(LineRenderer line)
+    {
+        linea = line;
     }
 
     //Función que llama el player para empezar la corrutina de llenar el tablero

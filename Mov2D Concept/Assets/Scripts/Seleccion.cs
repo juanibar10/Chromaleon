@@ -10,7 +10,6 @@ public class Seleccion : MonoBehaviour
     public GameObject objeto;
     public bool seleccionando;
     public int seleccion = 0;
-
     public Baldosa baldosaActual;
 
     public ManagerBaldosas managerBaldosas;
@@ -37,6 +36,7 @@ public class Seleccion : MonoBehaviour
                                 if (hit.transform.name == item.name && hit.transform.gameObject.GetComponent<Baldosa>().color != Colores.Ninguno)
                                 {
                                     objeto = Instantiate(objetoSeleccion, hit.transform.position, Quaternion.identity);
+                                    managerBaldosas.AsignarLinea(objeto.transform.GetChild(0).gameObject.GetComponent<LineRenderer>());
                                     baldosaActual = hit.transform.gameObject.GetComponent<Baldosa>();
                                     seleccionando = true;
                                 }
