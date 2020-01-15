@@ -67,36 +67,27 @@ public class ManagerBaldosas : MonoBehaviour
                                     yield return new WaitForSeconds(time);
                                 }
                             }
-
-                            if (item.upObject != null)
-                            {
-                                if (item.upObject.transform.childCount > 0)
-                                {
-                                    item.upObject.transform.GetChild(0).SetParent(item.transform);
-                                    item.transform.GetChild(0).transform.localPosition = new Vector3(0, 0.5f, 0);
-                                    item.color = item.transform.GetComponentInChildren<Hoja>().color;
-                                    yield return new WaitForSeconds(time);
-                                }
-                            }
                         }
                     }
                     else
                     {
-                        if(item.transform.childCount == 0 && item.upObject.upObjectAlmacen != null)
+                        if (item.transform.childCount == 0 && item.upObject.upObjectAlmacen != null )
                         {
-                            GameObject objeto = Instantiate(item.upObject.upObjectAlmacen.Almacen[0].gameObject);
-                            item.upObject.upObjectAlmacen.Almacen.RemoveAt(0);
-                            objeto.transform.SetParent(item.transform);
-                            objeto.transform.localPosition = new Vector3(0, 0.5f, 0);
-                            item.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, -90);
-                            objeto.transform.localScale = new Vector3(10, 10, 30);
-                            item.transform.GetChild(0).transform.localPosition = new Vector3(0, 0.5f, 0);
-                            item.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, -90);
-                            item.color = item.transform.GetComponentInChildren<Hoja>().color;
-                            yield return new WaitForSeconds(time);
+                            if (!item.contienePlayer)
+                            {
+                                GameObject objeto = Instantiate(item.upObject.upObjectAlmacen.Almacen[0].gameObject);
+                                item.upObject.upObjectAlmacen.Almacen.RemoveAt(0);
+                                objeto.transform.SetParent(item.transform);
+                                objeto.transform.localPosition = new Vector3(0, 0.5f, 0);
+                                item.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, -90);
+                                objeto.transform.localScale = new Vector3(10, 10, 30);
+                                item.transform.GetChild(0).transform.localPosition = new Vector3(0, 0.5f, 0);
+                                item.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, -90);
+                                item.color = item.transform.GetComponentInChildren<Hoja>().color;
+                                yield return new WaitForSeconds(time);
+                            }
                         }
                     }
-                    
                 }
                 else if (item.transform.childCount == 0 && item.upObject == null  && item.upObjectAlmacen != null)
                 {

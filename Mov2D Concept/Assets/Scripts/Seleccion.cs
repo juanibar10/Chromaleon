@@ -5,7 +5,7 @@ using UnityEngine;
 public class Seleccion : MonoBehaviour
 {
     public GameObject objetoSeleccion;
-    public Camera nonVRCamera;
+    public Camera camara;
     public LayerMask layer;
     public GameObject objeto;
     public bool seleccionando;
@@ -24,7 +24,7 @@ public class Seleccion : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     RaycastHit hit;
-                    Ray ray = nonVRCamera.ScreenPointToRay(Input.mousePosition);
+                    Ray ray = camara.ScreenPointToRay(Input.mousePosition);
 
                     if (Physics.Raycast(ray, out hit))
                     {
@@ -49,7 +49,7 @@ public class Seleccion : MonoBehaviour
                 if (objeto != null)
                 {
                     RaycastHit hit;
-                    Ray ray = nonVRCamera.ScreenPointToRay(Input.mousePosition);
+                    Ray ray = camara.ScreenPointToRay(Input.mousePosition);
 
                     if (Physics.Raycast(ray, out hit))
                     {
@@ -71,7 +71,5 @@ public class Seleccion : MonoBehaviour
 
         if (seleccion == 1)
             Destroy(objeto);
-        
-           
     }
 }
