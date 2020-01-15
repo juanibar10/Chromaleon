@@ -26,7 +26,8 @@ public class Baldosa : MonoBehaviour
     {
         getNearbyObjecs(1.2f);
         getDownObject();
-        color = transform.GetComponentInChildren<Hoja>().color;
+        if(transform.childCount > 0)
+            color = transform.GetComponentInChildren<Hoja>().color;
     }
 
     private void Update()
