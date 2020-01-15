@@ -19,7 +19,7 @@ public class Baldosa : MonoBehaviour
     public Colores color;
 
     public List<GameObject> adjacentObjects = new List<GameObject>();
-    public GameObject upObject;
+    public Baldosa upObject;
 
     private void Awake()
     {
@@ -30,14 +30,17 @@ public class Baldosa : MonoBehaviour
 
     private void Update()
     {
+        if (transform.childCount == 0)
+            contieneEnemigo = false;
+        else
+            contieneEnemigo = true;
     }
 
     private void OnTriggerEnter(Collider collision)
     {
         if (collision.tag == "Seleccion")
-        {
             seleccionada = true;
-        }
+
         if (collision.tag == "Player")
             contienePlayer = true;
     }
@@ -68,7 +71,7 @@ public class Baldosa : MonoBehaviour
         while (i < hitCollider.Length)
         {
             if (hitCollider[i].gameObject.name != name && hitCollider[i].tag == "Centro")
-                upObject = hitCollider[i].gameObject;
+                upObject = hitCollider[i].gameObject.GetComponent<Baldosa>();
             i++;
         }
     }

@@ -32,23 +32,57 @@ public class ManagerBaldosas : MonoBehaviour
 
     public void ComprobarCasillas()
     {
+        StartCoroutine(comprobar());
+    }
+
+    public IEnumerator comprobar()
+    {
         do
         {
             todasLlenas = true;
             foreach (var item in baldosas)
             {
-                if (item.transform.childCount == 0 && item.upObject != null && item.upObject.transform.childCount != 0)
+                if (item.transform.childCount == 0 && item.upObject != null && item.upObject.transform.childCount > 0 && !item.contienePlayer)
                 {
                     todasLlenas = false;
                     item.upObject.transform.GetChild(0).SetParent(item.transform);
                     item.transform.GetChild(0).transform.localPosition = Vector3.zero;
                     item.color = item.transform.GetComponentInChildren<Hoja>().color;
+                    yield return new WaitForSeconds(0.05f);
+                }
+                else if (item.transform.childCount == 0 && item.upObject != null)
+                {
+                    if (item.upObject.contienePlayer)
+                    {
+                        print(item.upObject);
+                        todasLlenas = false;
+                        if (item.upObject.upObject != null)
+                        {
+                            if (item.upObject.upObject.transform.childCount > 0)
+                            {
+                                item.upObject.upObject.transform.GetChild(0).transform.SetParent(item.upObject.transform);
+                                item.upObject.transform.GetChild(0).transform.localPosition = Vector3.zero;
+                                item.upObject.color = item.upObject.transform.GetComponentInChildren<Hoja>().color;
+                                yield return new WaitForSeconds(0.05f);
+                            }
+                        }
+
+                        if (item.upObject != null)
+                        {
+                            if (item.upObject.transform.childCount > 0)
+                            {
+                                item.upObject.transform.GetChild(0).SetParent(item.transform);
+                                item.transform.GetChild(0).transform.localPosition = Vector3.zero;
+                                item.color = item.transform.GetComponentInChildren<Hoja>().color;
+                                yield return new WaitForSeconds(0.05f);
+                            }
+                        } 
+                    }
                 }
             }
         }
         while (!todasLlenas);
-
-       
     }
+
 
 }

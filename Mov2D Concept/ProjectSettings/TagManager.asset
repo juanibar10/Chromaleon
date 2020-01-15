@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Seleccion
   - Centro
+  - Almacen
   layers:
   - Default
   - TransparentFX
