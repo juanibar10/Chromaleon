@@ -45,6 +45,7 @@ public class Player : MonoBehaviour
         seleccion.seleccion = 0;
         baldosas.baldosasSeleccionadas = new List<Baldosa>();
         //se comprueba el tablero y si falta alguna ficha se llena
+        Destroy(GameObject.FindGameObjectWithTag("Trail").gameObject);
         baldosas.ComprobarCasillas();
 
     }

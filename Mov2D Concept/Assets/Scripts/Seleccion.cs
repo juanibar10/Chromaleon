@@ -74,6 +74,9 @@ public class Seleccion : MonoBehaviour
         }
 
         if (seleccion == 1)
+        {
+            objeto.transform.GetChild(0).SetParent(null);
             Destroy(objeto);
+        }
     }
 }

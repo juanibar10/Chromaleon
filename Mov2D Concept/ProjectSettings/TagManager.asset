@@ -7,6 +7,7 @@ TagManager:
   - Seleccion
   - Centro
   - Almacen
+  - Trail
   layers:
   - Default
   - TransparentFX
@@ -49,4 +50,7 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 55417829
+    locked: 0
+  - name: UI
+    uniqueID: 2738470115
     locked: 0
