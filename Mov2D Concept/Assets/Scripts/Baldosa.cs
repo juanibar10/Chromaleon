@@ -20,6 +20,7 @@ public class Baldosa : MonoBehaviour
 
     public List<GameObject> adjacentObjects = new List<GameObject>();
     public Baldosa upObject;
+    public AlmacenHojas upObjectAlmacen;
 
     private void Awake()
     {
@@ -72,6 +73,9 @@ public class Baldosa : MonoBehaviour
         {
             if (hitCollider[i].gameObject.name != name && hitCollider[i].tag == "Centro")
                 upObject = hitCollider[i].gameObject.GetComponent<Baldosa>();
+            else if(hitCollider[i].gameObject.name != name &&  hitCollider[i].tag == "Almacen")
+                upObjectAlmacen = hitCollider[i].gameObject.GetComponent<AlmacenHojas>();
+
             i++;
         }
     }

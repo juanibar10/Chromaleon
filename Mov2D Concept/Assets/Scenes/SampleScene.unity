@@ -8593,6 +8593,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Baldosa (24)
       objectReference: {fileID: 0}
+    - target: {fileID: 4886764219457447590, guid: 94b1d789e32a382449994cd36d120b11,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94b1d789e32a382449994cd36d120b11, type: 3}
 --- !u!1001 &1940307472

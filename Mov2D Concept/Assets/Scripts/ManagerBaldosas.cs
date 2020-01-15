@@ -32,51 +32,86 @@ public class ManagerBaldosas : MonoBehaviour
 
     public void ComprobarCasillas()
     {
-        StartCoroutine(comprobar());
+        StartCoroutine(comprobar(0.0001f));
     }
 
-    public IEnumerator comprobar()
+    public IEnumerator comprobar(float time)
     {
         do
         {
             todasLlenas = true;
             foreach (var item in baldosas)
             {
-                if (item.transform.childCount == 0 && item.upObject != null && item.upObject.transform.childCount > 0 && !item.contienePlayer)
+                if (item.transform.childCount == 0 && item.upObject != null && item.upObject.transform.childCount > 0 && !item.contienePlayer && !item.upObject.name.Contains("Almacen"))
                 {
                     todasLlenas = false;
                     item.upObject.transform.GetChild(0).SetParent(item.transform);
-                    item.transform.GetChild(0).transform.localPosition = Vector3.zero;
+                    item.transform.GetChild(0).transform.localPosition = new Vector3(0, 0.5f, 0);
                     item.color = item.transform.GetComponentInChildren<Hoja>().color;
-                    yield return new WaitForSeconds(0.05f);
+                    yield return new WaitForSeconds(time);
                 }
                 else if (item.transform.childCount == 0 && item.upObject != null)
                 {
-                    if (item.upObject.contienePlayer)
+                    if(item.upObject.upObject != null)
                     {
-                        print(item.upObject);
-                        todasLlenas = false;
-                        if (item.upObject.upObject != null)
+                        if (item.upObject.contienePlayer && !item.upObject.name.Contains("Almacen"))
                         {
-                            if (item.upObject.upObject.transform.childCount > 0)
+                            todasLlenas = false;
+                            if (item.upObject.upObject != null)
                             {
-                                item.upObject.upObject.transform.GetChild(0).transform.SetParent(item.upObject.transform);
-                                item.upObject.transform.GetChild(0).transform.localPosition = Vector3.zero;
-                                item.upObject.color = item.upObject.transform.GetComponentInChildren<Hoja>().color;
-                                yield return new WaitForSeconds(0.05f);
+                                if (item.upObject.upObject.transform.childCount > 0)
+                                {
+                                    item.upObject.upObject.transform.GetChild(0).transform.SetParent(item.upObject.transform);
+                                    item.upObject.transform.GetChild(0).transform.localPosition = new Vector3(0, 0.5f, 0);
+                                    item.upObject.color = item.upObject.transform.GetComponentInChildren<Hoja>().color;
+                                    yield return new WaitForSeconds(time);
+                                }
+                            }
+
+                            if (item.upObject != null)
+                            {
+                                if (item.upObject.transform.childCount > 0)
+                                {
+                                    item.upObject.transform.GetChild(0).SetParent(item.transform);
+                                    item.transform.GetChild(0).transform.localPosition = new Vector3(0, 0.5f, 0);
+                                    item.color = item.transform.GetComponentInChildren<Hoja>().color;
+                                    yield return new WaitForSeconds(time);
+                                }
                             }
                         }
-
-                        if (item.upObject != null)
+                    }
+                    else
+                    {
+                        if(item.transform.childCount == 0 && item.upObject.upObjectAlmacen != null)
                         {
-                            if (item.upObject.transform.childCount > 0)
-                            {
-                                item.upObject.transform.GetChild(0).SetParent(item.transform);
-                                item.transform.GetChild(0).transform.localPosition = Vector3.zero;
-                                item.color = item.transform.GetComponentInChildren<Hoja>().color;
-                                yield return new WaitForSeconds(0.05f);
-                            }
-                        } 
+                            GameObject objeto = Instantiate(item.upObject.upObjectAlmacen.Almacen[0].gameObject);
+                            item.upObject.upObjectAlmacen.Almacen.RemoveAt(0);
+                            objeto.transform.SetParent(item.transform);
+                            objeto.transform.localPosition = new Vector3(0, 0.5f, 0);
+                            item.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, -90);
+                            objeto.transform.localScale = new Vector3(10, 10, 30);
+                            item.transform.GetChild(0).transform.localPosition = new Vector3(0, 0.5f, 0);
+                            item.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, -90);
+                            item.color = item.transform.GetComponentInChildren<Hoja>().color;
+                            yield return new WaitForSeconds(time);
+                        }
+                    }
+                    
+                }
+                else if (item.transform.childCount == 0 && item.upObject == null  && item.upObjectAlmacen != null)
+                {
+                    if (!item.contienePlayer)
+                    {
+                        GameObject objeto = Instantiate(item.upObjectAlmacen.Almacen[0].gameObject);
+                        item.upObjectAlmacen.Almacen.RemoveAt(0);
+                        objeto.transform.SetParent(item.transform);
+                        objeto.transform.localPosition = new Vector3(0, 0.5f, 0);
+                        item.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, -90);
+                        objeto.transform.localScale = new Vector3(10, 10, 30);
+                        item.transform.GetChild(0).transform.localPosition = new Vector3(0, 0.5f, 0);
+                        item.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, -90);
+                        item.color = item.transform.GetComponentInChildren<Hoja>().color;
+                        yield return new WaitForSeconds(time);
                     }
                 }
             }
