@@ -21,6 +21,7 @@ public class Seleccion : MonoBehaviour
         {
             if (!seleccionando)
             {
+                //Manda un rayo desde la posicion del raton al mapa y si colisiona con una casilla crea el seleccionador en el centro de esta si cumple las condiciones
                 if (Input.GetMouseButtonDown(0))
                 {
                     RaycastHit hit;
@@ -32,6 +33,7 @@ public class Seleccion : MonoBehaviour
                         {
                             foreach (var item in baldosaActual.adjacentObjects)
                             {
+                                //si la casilla es una de las adyacentes y si el color es diferente a ninguno
                                 if (hit.transform.name == item.name && hit.transform.gameObject.GetComponent<Baldosa>().color != Colores.Ninguno)
                                 {
                                     objeto = Instantiate(objetoSeleccion, hit.transform.position, Quaternion.identity);
@@ -53,6 +55,7 @@ public class Seleccion : MonoBehaviour
 
                     if (Physics.Raycast(ray, out hit))
                     {
+                        // mueve el seleccionador si la casilla es una adyacente y si el color es el mismo que la anterior y si la casilla no esta seleccionada previamente
                         if (hit.transform.tag == "Centro" && baldosaActual.color == hit.transform.gameObject.GetComponent<Baldosa>().color && baldosaActual.adjacentObjects.Contains(hit.transform.gameObject) && !managerBaldosas.baldosasSeleccionadas.Contains(hit.transform.gameObject.GetComponent<Baldosa>()))
                         {
                             objeto.transform.position = hit.transform.position;
@@ -60,6 +63,7 @@ public class Seleccion : MonoBehaviour
                         }
                     }
                 }
+                // si se levanta el click el estado de seleccion para y se borra el seleccionador
                 if (Input.GetMouseButtonUp(0))
                 {
                     seleccion = 1;
