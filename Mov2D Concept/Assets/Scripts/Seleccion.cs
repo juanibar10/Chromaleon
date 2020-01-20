@@ -6,6 +6,7 @@ public class Seleccion : MonoBehaviour
 {
     public GameObject objetoSeleccion;
     public Camera camara;
+    public Player player;
     public LayerMask layer;
     public GameObject objeto;
     public bool seleccionando;
@@ -14,69 +15,126 @@ public class Seleccion : MonoBehaviour
 
     public ManagerBaldosas managerBaldosas;
 
+    
+
     private void Update()
     {
-        if(seleccion == 0)
+        if (!player.modoJuego)
         {
-            if (!seleccionando)
+            if (seleccion == 0)
             {
-                //Manda un rayo desde la posicion del raton al mapa y si colisiona con una casilla crea el seleccionador en el centro de esta si cumple las condiciones
-                if (Input.GetMouseButtonDown(0))
+                if (!seleccionando)
                 {
-                    RaycastHit hit;
-                    Ray ray = camara.ScreenPointToRay(Input.mousePosition);
-
-                    if (Physics.Raycast(ray, out hit))
+                    //Manda un rayo desde la posicion del raton al mapa y si colisiona con una casilla crea el seleccionador en el centro de esta si cumple las condiciones
+                    if (Input.GetMouseButtonDown(0))
                     {
-                        if (hit.transform.tag == "Centro")
+                        RaycastHit hit;
+                        Ray ray = camara.ScreenPointToRay(Input.mousePosition);
+
+                        if (Physics.Raycast(ray, out hit))
                         {
-                            foreach (var item in baldosaActual.adjacentObjects)
+                            if (hit.transform.tag == "Centro")
                             {
-                                //si la casilla es una de las adyacentes y si el color es diferente a ninguno
-                                if (hit.transform.name == item.name && hit.transform.gameObject.GetComponent<Baldosa>().color != Colores.Ninguno)
+                                foreach (var item in baldosaActual.adjacentObjects)
                                 {
-                                    objeto = Instantiate(objetoSeleccion, hit.transform.position, Quaternion.identity);
-                                    managerBaldosas.AsignarLinea(objeto.transform.GetChild(0).gameObject.GetComponent<LineRenderer>());
-                                    baldosaActual = hit.transform.gameObject.GetComponent<Baldosa>();
-                                    seleccionando = true;
+                                    //si la casilla es una de las adyacentes y si el color es diferente a ninguno
+                                    if (hit.transform.name == item.name && hit.transform.GetComponent<Baldosa>().color != Colores.Ninguno && managerBaldosas.baldosasSeleccionadas.ToArray().Length >= hit.transform.GetChild(0).gameObject.GetComponent<NPC>().minCombo)
+                                    {
+                                        objeto = Instantiate(objetoSeleccion, hit.transform.position, Quaternion.identity);
+                                        managerBaldosas.AsignarLinea(objeto.transform.GetChild(0).gameObject.GetComponent<LineRenderer>());
+                                        baldosaActual = hit.transform.gameObject.GetComponent<Baldosa>();
+                                        seleccionando = true;
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            if (seleccionando)
-            {
-                if (objeto != null)
+                if (seleccionando)
                 {
-                    RaycastHit hit;
-                    Ray ray = camara.ScreenPointToRay(Input.mousePosition);
-
-                    if (Physics.Raycast(ray, out hit))
+                    if (objeto != null)
                     {
-                        // mueve el seleccionador si la casilla es una adyacente y si el color es el mismo que la anterior y si la casilla no esta seleccionada previamente
-                        if (hit.transform.tag == "Centro" && baldosaActual.color == hit.transform.gameObject.GetComponent<Baldosa>().color && baldosaActual.adjacentObjects.Contains(hit.transform.gameObject) && !managerBaldosas.baldosasSeleccionadas.Contains(hit.transform.gameObject.GetComponent<Baldosa>()))
+                        RaycastHit hit;
+                        Ray ray = camara.ScreenPointToRay(Input.mousePosition);
+
+                        if (Physics.Raycast(ray, out hit))
                         {
-                            objeto.transform.position = hit.transform.position;
-                            baldosaActual = hit.transform.gameObject.GetComponent<Baldosa>(); 
+                            // mueve el seleccionador si la casilla es una adyacente y si el color es el mismo que la anterior y si la casilla no esta seleccionada previamente
+                            if (hit.transform.tag == "Centro")
+                            {
+                                if (hit.transform.GetComponent<Baldosa>().tipoEnemigo == TiposEnemigo.HojaMulticolor)
+                                {
+                                    if (baldosaActual.adjacentObjects.Contains(hit.transform.gameObject) && !managerBaldosas.baldosasSeleccionadas.Contains(hit.transform.gameObject.GetComponent<Baldosa>()) && managerBaldosas.baldosasSeleccionadas.ToArray().Length >= hit.transform.GetChild(0).gameObject.GetComponent<NPC>().minCombo)
+                                    {
+                                        objeto.transform.position = hit.transform.position;
+                                        baldosaActual = hit.transform.gameObject.GetComponent<Baldosa>();
+                                    }
+                                }
+                                else
+                                {
+                                    if (baldosaActual.color == Colores.Multicolor)
+                                    {
+                                        if (baldosaActual.adjacentObjects.Contains(hit.transform.gameObject) && !managerBaldosas.baldosasSeleccionadas.Contains(hit.transform.gameObject.GetComponent<Baldosa>()) && managerBaldosas.baldosasSeleccionadas.ToArray().Length >= hit.transform.GetChild(0).gameObject.GetComponent<NPC>().minCombo)
+                                        {
+                                            objeto.transform.position = hit.transform.position;
+                                            baldosaActual = hit.transform.gameObject.GetComponent<Baldosa>();
+                                            if (baldosaActual.tipoEnemigo == TiposEnemigo.Enemigo || baldosaActual.tipoEnemigo == TiposEnemigo.Mosca)
+                                            {
+                                                StartCoroutine(acabarAlSerEnemigo());
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (baldosaActual.color == hit.transform.gameObject.GetComponent<Baldosa>().color && baldosaActual.adjacentObjects.Contains(hit.transform.gameObject) && !managerBaldosas.baldosasSeleccionadas.Contains(hit.transform.gameObject.GetComponent<Baldosa>()) && managerBaldosas.baldosasSeleccionadas.ToArray().Length >= hit.transform.GetChild(0).gameObject.GetComponent<NPC>().minCombo)
+                                        {
+                                            objeto.transform.position = hit.transform.position;
+                                            baldosaActual = hit.transform.gameObject.GetComponent<Baldosa>();
+                                            if (baldosaActual.tipoEnemigo == TiposEnemigo.Enemigo || baldosaActual.tipoEnemigo == TiposEnemigo.Mosca)
+                                            {
+                                                StartCoroutine(acabarAlSerEnemigo());
+                                            }
+                                        }
+                                    }
+
+                                }
+
+                            }
+                        }
+                        // si se levanta el click el estado de seleccion para y se borra el seleccionador
+                        if (Input.GetMouseButtonUp(0))
+                        {
+                            seleccion = 1;
+                            seleccionando = false;
+                            managerBaldosas.baldosasSeleccionadas[managerBaldosas.baldosasSeleccionadas.ToArray().Length - 1].color = Colores.Ninguno;
                         }
                     }
                 }
-                // si se levanta el click el estado de seleccion para y se borra el seleccionador
-                if (Input.GetMouseButtonUp(0))
-                {
-                    seleccion = 1;
-                    seleccionando = false;
-                    managerBaldosas.baldosasSeleccionadas[managerBaldosas.baldosasSeleccionadas.ToArray().Length - 1].color = Colores.Ninguno;
-                }
             }
+
         }
+        else
+        {
+
+        }
+       
 
         if (seleccion == 1)
         {
             objeto.transform.GetChild(0).SetParent(null);
             Destroy(objeto);
+            player.empezarMoverJugador();
         }
+    }
+
+    IEnumerator acabarAlSerEnemigo()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        seleccion = 1;
+        seleccionando = false;
+        managerBaldosas.baldosasSeleccionadas[managerBaldosas.baldosasSeleccionadas.ToArray().Length - 1].color = Colores.Ninguno;
+        managerBaldosas.baldosasSeleccionadas[managerBaldosas.baldosasSeleccionadas.ToArray().Length - 1].tipoEnemigo = TiposEnemigo.Ninguno;
     }
 }

@@ -28,23 +28,24 @@ public class ManagerBaldosas : MonoBehaviour
                 {
                     baldosasSeleccionadas.Add(item);
 
-                    if(linea.positionCount > 1)
+                    if(linea != null)
                     {
-                        linea.positionCount = baldosasSeleccionadas.ToArray().Length +1;
-                        linea.SetPosition(baldosasSeleccionadas.ToArray().Length, new Vector3(baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.x, baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.y + 0.2f, baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.z));
-                    }
-                    else if(linea.positionCount == 0)
-                    {
-                        linea.positionCount = 2;
-                        foreach (var baldosa in baldosas)
+                        if (linea.positionCount > 1)
                         {
-                            if (baldosa.contienePlayer)
-                                linea.SetPosition(0, new Vector3(baldosa.transform.position.x,baldosa.transform.position.y + 0.2f,baldosa.transform.position.z));
+                            linea.positionCount = baldosasSeleccionadas.ToArray().Length + 1;
+                            linea.SetPosition(baldosasSeleccionadas.ToArray().Length, new Vector3(baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.x, baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.y + 0.2f, baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.z));
                         }
-                        linea.SetPosition(1, new Vector3(baldosasSeleccionadas.ToArray()[0].transform.position.x, baldosasSeleccionadas.ToArray()[0].transform.position.y + 0.2f, baldosasSeleccionadas.ToArray()[0].transform.position.z));
+                        else if (linea.positionCount == 0)
+                        {
+                            linea.positionCount = 2;
+                            foreach (var baldosa in baldosas)
+                            {
+                                if (baldosa.contienePlayer)
+                                    linea.SetPosition(0, new Vector3(baldosa.transform.position.x, baldosa.transform.position.y + 0.2f, baldosa.transform.position.z));
+                            }
+                            linea.SetPosition(1, new Vector3(baldosasSeleccionadas.ToArray()[0].transform.position.x, baldosasSeleccionadas.ToArray()[0].transform.position.y + 0.2f, baldosasSeleccionadas.ToArray()[0].transform.position.z));
+                        }
                     }
-
-                    
                 }
             }
         }
@@ -84,7 +85,7 @@ public class ManagerBaldosas : MonoBehaviour
                     todasLlenas = false;
                     item.upObject.transform.GetChild(0).SetParent(item.transform);
                     item.transform.GetChild(0).transform.localPosition = new Vector3(0, 0.5f, 0);
-                    item.color = item.transform.GetComponentInChildren<Hoja>().color;
+                    item.color = item.transform.GetComponentInChildren<NPC>().color;
                     yield return new WaitForSeconds(time);
                 }
                 //si la casilla esta vacia y la de arriba contiene el player
@@ -102,7 +103,7 @@ public class ManagerBaldosas : MonoBehaviour
                                 {
                                     item.upObject.upObject.transform.GetChild(0).transform.SetParent(item.upObject.transform);
                                     item.upObject.transform.GetChild(0).transform.localPosition = new Vector3(0, 0.5f, 0);
-                                    item.upObject.color = item.upObject.transform.GetComponentInChildren<Hoja>().color;
+                                    item.upObject.color = item.upObject.transform.GetComponentInChildren<NPC>().color;
                                     yield return new WaitForSeconds(time);
                                 }
                             }
@@ -123,7 +124,7 @@ public class ManagerBaldosas : MonoBehaviour
                                 objeto.transform.localScale = new Vector3(10, 10, 30);
                                 item.transform.GetChild(0).transform.localPosition = new Vector3(0, 0.5f, 0);
                                 item.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, -90);
-                                item.color = item.transform.GetComponentInChildren<Hoja>().color;
+                                item.color = item.transform.GetComponentInChildren<NPC>().color;
                                 yield return new WaitForSeconds(time);
                             }
                         }
@@ -142,7 +143,7 @@ public class ManagerBaldosas : MonoBehaviour
                         objeto.transform.localScale = new Vector3(10, 10, 30);
                         item.transform.GetChild(0).transform.localPosition = new Vector3(0, 0.5f, 0);
                         item.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, -90);
-                        item.color = item.transform.GetComponentInChildren<Hoja>().color;
+                        item.color = item.transform.GetComponentInChildren<NPC>().color;
                         yield return new WaitForSeconds(time);
                     }
                 }

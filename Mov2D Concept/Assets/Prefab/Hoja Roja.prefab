@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8334597226882294847}
   - component: {fileID: 4383475224454619398}
   - component: {fileID: 8108687224861337758}
-  - component: {fileID: 3914121956296584373}
+  - component: {fileID: 6561394127338508865}
   m_Layer: 8
   m_Name: Hoja Roja
   m_TagString: Untagged
@@ -80,7 +80,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &3914121956296584373
+--- !u!114 &6561394127338508865
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -89,11 +89,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8466915753737770643}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 117a012f8fb4fec4e8c04874560f4e0a, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e13fd24314372e438b3779976e395cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   material:
   - {fileID: 2100000, guid: 23fd93ae0862afc4aa32885719980457, type: 2}
   - {fileID: 2100000, guid: 9036758fb51af384eab27916b73eba62, type: 2}
   - {fileID: 2100000, guid: 0d79b07efb7dd8848a2fbcc713fd4b6e, type: 2}
+  - {fileID: 2100000, guid: b9c14dffa96b7f14ba66788ea2076411, type: 2}
+  tipoEnemigo: 0
+  minCombo: 0

@@ -8,6 +8,7 @@ public enum Colores
     Azul,
     Rojo,
     Verde,
+    Multicolor,
     Ninguno,
 }
 
@@ -19,7 +20,9 @@ public class Baldosa : MonoBehaviour
     //Si esta seleccionada para combo
     public bool seleccionada;
     //El color de la casilla
-    public Colores color;
+    public Colores color; 
+    //El color de la casilla
+    public TiposEnemigo tipoEnemigo;
     //Lista con objetos de las casillas adyacentes
     public List<GameObject> adjacentObjects = new List<GameObject>();
     //Casilla superior
@@ -35,7 +38,10 @@ public class Baldosa : MonoBehaviour
         getDownObject();
         //Si contiene algun enemigo u hoja se le asigna el color de este
         if(transform.childCount > 0)
-            color = transform.GetComponentInChildren<Hoja>().color;
+        {
+            color = transform.GetComponentInChildren<NPC>().color;
+            tipoEnemigo = transform.GetComponentInChildren<NPC>().tipoEnemigo;
+        }
     }
 
     private void Update()

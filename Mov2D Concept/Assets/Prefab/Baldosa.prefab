@@ -111,6 +111,7 @@ MonoBehaviour:
   contienePlayer: 0
   seleccionada: 0
   color: 2
+  tipoEnemigo: 0
   adjacentObjects: []
   upObject: {fileID: 0}
   upObjectAlmacen: {fileID: 0}
@@ -121,6 +122,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1200382311225503117}
     m_Modifications:
+    - target: {fileID: 4541680688898019684, guid: 011c07d2dcc61ff4a8ddf10ca2faafe3,
+        type: 3}
+      propertyPath: material.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541680688898019684, guid: 011c07d2dcc61ff4a8ddf10ca2faafe3,
+        type: 3}
+      propertyPath: material.Array.data[3]
+      value: 
+      objectReference: {fileID: 2100000, guid: b9c14dffa96b7f14ba66788ea2076411, type: 2}
     - target: {fileID: 8334597226882294847, guid: 011c07d2dcc61ff4a8ddf10ca2faafe3,
         type: 3}
       propertyPath: m_LocalPosition.x
