@@ -20,6 +20,13 @@ public class Player : MonoBehaviour
     public int cambiosHojaMaximos;
     public Text cambiosHojaTexto;
 
+    //Lista con objetos de las casillas adyacentes
+    public List<GameObject> adjacentObjects = new List<GameObject>();
+
+    private void Awake()
+    {
+        getNearbyObjecs(2.6f);
+    }
 
     public void empezarMoverJugador()
     {
@@ -77,6 +84,21 @@ public class Player : MonoBehaviour
         //se comprueba el tablero y si falta alguna ficha se llena
         Destroy(GameObject.FindGameObjectWithTag("Trail").gameObject);
         baldosas.ComprobarCasillas();
+        adjacentObjects = new List<GameObject>();
+        getNearbyObjecs(2.6f);
+    }
 
+   
+
+    void getNearbyObjecs(float radius)
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
+        int i = 0;
+        while (i < hitColliders.Length)
+        {
+            if (hitColliders[i].gameObject.name != name && hitColliders[i].tag == "Centro")
+                adjacentObjects.Add(hitColliders[i].gameObject);
+            i++;
+        }
     }
 }

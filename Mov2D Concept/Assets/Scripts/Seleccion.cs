@@ -12,7 +12,6 @@ public class Seleccion : MonoBehaviour
     public bool seleccionando;
     public int seleccion = 0;
     public Baldosa baldosaActual;
-
     public ManagerBaldosas managerBaldosas;
 
     
@@ -116,6 +115,36 @@ public class Seleccion : MonoBehaviour
         }
         else
         {
+            if (player.cambiosHoja > 0)
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    RaycastHit hit;
+                    Ray ray = camara.ScreenPointToRay(Input.mousePosition);
+
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        if (hit.transform.tag == "Centro")
+                        {
+                            foreach (var item in baldosaActual.adjacentObjects)
+                            {
+                                //si la casilla es una de las adyacentes y si el color es diferente a ninguno
+                                if (hit.transform.name == item.name && hit.transform.GetComponent<Baldosa>().color != Colores.Ninguno && managerBaldosas.baldosasSeleccionadas.ToArray().Length >= hit.transform.GetChild(0).gameObject.GetComponent<NPC>().minCombo)
+                                {
+                                    objeto = Instantiate(objetoSeleccion, hit.transform.position, Quaternion.identity);
+                                    managerBaldosas.AsignarLinea(objeto.transform.GetChild(0).gameObject.GetComponent<LineRenderer>());
+                                    baldosaActual = hit.transform.gameObject.GetComponent<Baldosa>();
+                                    seleccionando = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+            }
+            else
+                player.modoJuego = false;
 
         }
        

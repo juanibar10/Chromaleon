@@ -14,40 +14,53 @@ public class ManagerBaldosas : MonoBehaviour
     //True si todas estan llenas de algun enemigo, pieza o player
     public bool todasLlenas = true;
 
+    private Player player;
     public LineRenderer linea;
 
+    private void Awake()
+    {
+        player = FindObjectOfType<Player>();
+    }
 
     private void Update()
     {
         //seleccion = 0 es el estado de seleccion, si la booleana seleccionada esta en true y la lista no contiene esa casilla se añade a la lista
-        if(seleccion.seleccion == 0)
+        if(seleccion.seleccion == 0 )
         {
-            foreach (var item in baldosas)
+            if (!player.modoJuego)
             {
-                if (item.seleccionada && !baldosasSeleccionadas.Contains(item))
+                foreach (var item in baldosas)
                 {
-                    baldosasSeleccionadas.Add(item);
-
-                    if(linea != null)
+                    if (item.seleccionada && !baldosasSeleccionadas.Contains(item))
                     {
-                        if (linea.positionCount > 1)
+                        baldosasSeleccionadas.Add(item);
+
+                        if (linea != null)
                         {
-                            linea.positionCount = baldosasSeleccionadas.ToArray().Length + 1;
-                            linea.SetPosition(baldosasSeleccionadas.ToArray().Length, new Vector3(baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.x, baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.y + 0.2f, baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.z));
-                        }
-                        else if (linea.positionCount == 0)
-                        {
-                            linea.positionCount = 2;
-                            foreach (var baldosa in baldosas)
+                            if (linea.positionCount > 1)
                             {
-                                if (baldosa.contienePlayer)
-                                    linea.SetPosition(0, new Vector3(baldosa.transform.position.x, baldosa.transform.position.y + 0.2f, baldosa.transform.position.z));
+                                linea.positionCount = baldosasSeleccionadas.ToArray().Length + 1;
+                                linea.SetPosition(baldosasSeleccionadas.ToArray().Length, new Vector3(baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.x, baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.y + 0.2f, baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.z));
                             }
-                            linea.SetPosition(1, new Vector3(baldosasSeleccionadas.ToArray()[0].transform.position.x, baldosasSeleccionadas.ToArray()[0].transform.position.y + 0.2f, baldosasSeleccionadas.ToArray()[0].transform.position.z));
+                            else if (linea.positionCount == 0)
+                            {
+                                linea.positionCount = 2;
+                                foreach (var baldosa in baldosas)
+                                {
+                                    if (baldosa.contienePlayer)
+                                        linea.SetPosition(0, new Vector3(baldosa.transform.position.x, baldosa.transform.position.y + 0.2f, baldosa.transform.position.z));
+                                }
+                                linea.SetPosition(1, new Vector3(baldosasSeleccionadas.ToArray()[0].transform.position.x, baldosasSeleccionadas.ToArray()[0].transform.position.y + 0.2f, baldosasSeleccionadas.ToArray()[0].transform.position.z));
+                            }
                         }
                     }
                 }
             }
+            else
+            {
+
+            }
+           
         }
         //seleccion = 1, en este estado es el movimiento del player, y se resetean todas las booleanas a seleccionada = false
         if(seleccion.seleccion == 1)
