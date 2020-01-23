@@ -100,4 +100,10 @@ public class Baldosa : MonoBehaviour
         }
     }
 
+    public void Actualizar()
+    {
+        color = transform.GetChild(0).GetComponent<NPC>().color;
+        tipoEnemigo = transform.GetChild(0).GetComponent<NPC>().tipoEnemigo;
+    }
+
 }

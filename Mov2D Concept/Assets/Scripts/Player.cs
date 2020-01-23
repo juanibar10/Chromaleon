@@ -22,7 +22,8 @@ public class Player : MonoBehaviour
 
     //Lista con objetos de las casillas adyacentes
     public List<GameObject> adjacentObjects = new List<GameObject>();
-
+    public float time;
+    public float forTime;
     private void Awake()
     {
         getNearbyObjecs(2.6f);
@@ -30,7 +31,7 @@ public class Player : MonoBehaviour
 
     public void empezarMoverJugador()
     {
-        StartCoroutine(MoverJugador(0.001f));
+        StartCoroutine(MoverJugador(0.0001f));
         seleccion.seleccion = 2;
     }
 
@@ -39,6 +40,8 @@ public class Player : MonoBehaviour
         if (!seleccion.seleccionando && seleccion.seleccion == 0)
             modoJuego = !modoJuego;
 
+        if (cambiosHoja < 0)
+            modoJuego = false;
         contenedorTextoCambioHojas.SetActive(modoJuego);
     }
 
@@ -54,6 +57,7 @@ public class Player : MonoBehaviour
 
     public IEnumerator MoverJugador(float tiempo)
     {
+        forTime = 50;
         //Mover el jugador por cada baldosa seleccionada
         for (int i = 0; i < baldosas.baldosasSeleccionadas.ToArray().Length; i++)
         {
@@ -61,11 +65,13 @@ public class Player : MonoBehaviour
             float auxZ = transform.position.z;
             //Shake de la camara al matar cada enemigo
             CameraShaker.Instance.ShakeOnce(3, 7, 0.1f, 0.3f);
+
             //for de transicion entre baldosas
-            for (int j = 0; j <= 50; j++)
+            for (int j = 0; j <= forTime; j++)
             {
-                transform.position = new Vector3(Mathf.Lerp(auxX, baldosas.baldosasSeleccionadas[i].transform.position.x, j * 0.02f), transform.position.y, Mathf.Lerp(auxZ, baldosas.baldosasSeleccionadas[i].transform.position.z, j * 0.02f));
-                yield return new WaitForSeconds(tiempo * 0.02f);
+                transform.position = new Vector3(Mathf.Lerp(auxX, baldosas.baldosasSeleccionadas[i].transform.position.x, j * 1/forTime), transform.position.y, Mathf.Lerp(auxZ, baldosas.baldosasSeleccionadas[i].transform.position.z, j * 1/forTime));
+                forTime = forTime / 1.005f;
+                yield return new WaitForSeconds(tiempo * 1/forTime);
             }
             if(baldosas.baldosasSeleccionadas[i].GetComponent<Baldosa>().tipoEnemigo == TiposEnemigo.Mosca)
             {
@@ -88,15 +94,13 @@ public class Player : MonoBehaviour
         getNearbyObjecs(2.6f);
     }
 
-   
-
     void getNearbyObjecs(float radius)
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
         int i = 0;
         while (i < hitColliders.Length)
         {
-            if (hitColliders[i].gameObject.name != name && hitColliders[i].tag == "Centro")
+            if (hitColliders[i].tag == "Centro")
                 adjacentObjects.Add(hitColliders[i].gameObject);
             i++;
         }

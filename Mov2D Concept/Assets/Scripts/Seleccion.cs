@@ -14,8 +14,6 @@ public class Seleccion : MonoBehaviour
     public Baldosa baldosaActual;
     public ManagerBaldosas managerBaldosas;
 
-    
-
     private void Update()
     {
         if (!player.modoJuego)
@@ -106,7 +104,7 @@ public class Seleccion : MonoBehaviour
                         {
                             seleccion = 1;
                             seleccionando = false;
-                            managerBaldosas.baldosasSeleccionadas[managerBaldosas.baldosasSeleccionadas.ToArray().Length - 1].color = Colores.Ninguno;
+                            //managerBaldosas.baldosasSeleccionadas[managerBaldosas.baldosasSeleccionadas.ToArray().Length - 1].color = Colores.Ninguno;
                         }
                     }
                 }
@@ -117,31 +115,63 @@ public class Seleccion : MonoBehaviour
         {
             if (player.cambiosHoja > 0)
             {
-                if (Input.GetMouseButtonDown(0))
+                if (!seleccionando)
                 {
-                    RaycastHit hit;
-                    Ray ray = camara.ScreenPointToRay(Input.mousePosition);
-
-                    if (Physics.Raycast(ray, out hit))
+                    if (Input.GetMouseButtonDown(0))
                     {
-                        if (hit.transform.tag == "Centro")
+                        RaycastHit hit;
+                        Ray ray = camara.ScreenPointToRay(Input.mousePosition);
+
+                        if (Physics.Raycast(ray, out hit))
                         {
-                            foreach (var item in baldosaActual.adjacentObjects)
+                            if (hit.transform.tag == "Centro")
                             {
-                                //si la casilla es una de las adyacentes y si el color es diferente a ninguno
-                                if (hit.transform.name == item.name && hit.transform.GetComponent<Baldosa>().color != Colores.Ninguno && managerBaldosas.baldosasSeleccionadas.ToArray().Length >= hit.transform.GetChild(0).gameObject.GetComponent<NPC>().minCombo)
+                                foreach (var item in player.adjacentObjects)
                                 {
-                                    objeto = Instantiate(objetoSeleccion, hit.transform.position, Quaternion.identity);
-                                    managerBaldosas.AsignarLinea(objeto.transform.GetChild(0).gameObject.GetComponent<LineRenderer>());
-                                    baldosaActual = hit.transform.gameObject.GetComponent<Baldosa>();
-                                    seleccionando = true;
+                                    //si la casilla es una de las adyacentes y si el color es diferente a ninguno
+                                    if (hit.transform.name == item.name && hit.transform.GetComponent<Baldosa>().color != Colores.Ninguno && hit.transform.GetComponent<Baldosa>().tipoEnemigo == TiposEnemigo.Hoja )
+                                    {
+                                        objeto = Instantiate(objetoSeleccion, hit.transform.position, Quaternion.identity);
+                                        managerBaldosas.AsignarLinea(objeto.transform.GetChild(0).gameObject.GetComponent<LineRenderer>());
+                                        baldosaActual = hit.transform.gameObject.GetComponent<Baldosa>();
+                                        managerBaldosas.baldosasSeleccionadas.Add(hit.transform.GetComponent<Baldosa>());
+                                        seleccionando = true;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+                else if (seleccionando) 
+                {
+                    if (objeto != null)
+                    {
+                        RaycastHit hit;
+                        Ray ray = camara.ScreenPointToRay(Input.mousePosition);
+
+                        if (Physics.Raycast(ray, out hit))
+                        {
+                            // mueve el seleccionador si la casilla es una adyacente y si el color es el mismo que la anterior y si la casilla no esta seleccionada previamente
+                            if (hit.transform.tag == "Centro")
+                            {
+                                if (hit.transform.GetComponent<Baldosa>().tipoEnemigo == TiposEnemigo.Hoja)
+                                {
+                                    if (baldosaActual.adjacentObjects.Contains(hit.transform.gameObject) && !managerBaldosas.baldosasSeleccionadas.Contains(hit.transform.gameObject.GetComponent<Baldosa>()))
+                                    {
+                                        objeto.transform.position = hit.transform.position;
+                                        baldosaActual = hit.transform.gameObject.GetComponent<Baldosa>();
+                                        managerBaldosas.baldosasSeleccionadas.Add(hit.transform.gameObject.GetComponent<Baldosa>());
+                                        seleccionando = false;
+                                        Destroy(objeto);
+                                        seleccion = 3;
+                                        StartCoroutine(cambiarHojas(0.5f));
+                                    }
                                 }
                             }
                         }
                     }
                 }
-
-
             }
             else
                 player.modoJuego = false;
@@ -155,6 +185,37 @@ public class Seleccion : MonoBehaviour
             Destroy(objeto);
             player.empezarMoverJugador();
         }
+    }
+
+    IEnumerator cambiarHojas(float time)
+    {
+        print("a");
+        Vector3 auxPos1;
+        Vector3 auxPos2;
+        GameObject objeto1 = managerBaldosas.baldosasSeleccionadas[0].transform.GetChild(0).gameObject;
+        GameObject objeto2 = managerBaldosas.baldosasSeleccionadas[1].transform.GetChild(0).gameObject;
+        objeto1.transform.SetParent(null);
+        objeto2.transform.SetParent(null);
+        auxPos1 = objeto1.transform.position;
+        auxPos2 = objeto2.transform.position;
+
+
+        for (int i = 0; i <= 50; i++)
+        {
+            objeto1.transform.position = new Vector3(Mathf.Lerp(objeto1.transform.position.x, auxPos2.x, i * 0.02f), objeto1.transform.position.y, Mathf.Lerp(objeto1.transform.position.z, auxPos2.z, i * 0.02f));
+            objeto2.transform.position = new Vector3(Mathf.Lerp(objeto2.transform.position.x, auxPos1.x, i * 0.02f), objeto2.transform.position.y, Mathf.Lerp(objeto2.transform.position.z, auxPos1.z, i * 0.02f));
+            yield return new WaitForSeconds(time * 0.02f);
+        }
+        objeto1.transform.SetParent(managerBaldosas.baldosasSeleccionadas[1].transform);
+        objeto2.transform.SetParent(managerBaldosas.baldosasSeleccionadas[0].transform);
+        managerBaldosas.baldosasSeleccionadas[0].Actualizar();
+        managerBaldosas.baldosasSeleccionadas[0].seleccionada = false;
+        managerBaldosas.baldosasSeleccionadas[1].Actualizar();
+        managerBaldosas.baldosasSeleccionadas[1].seleccionada = false;
+        managerBaldosas.baldosasSeleccionadas = new List<Baldosa>();
+        seleccion = 0;
+        player.cambiosHoja--;
+        StopAllCoroutines();
     }
 
     IEnumerator acabarAlSerEnemigo()
