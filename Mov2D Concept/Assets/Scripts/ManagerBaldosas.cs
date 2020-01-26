@@ -2,168 +2,117 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//For correcto para recorrer array de primero a ultimo
+/*
+    for (int i = baldosas.fila.Length - 1; i >= 0; i--)
+    {
+        for (int j = 0; j < baldosas.fila[0].columna.Length; j++)
+        {
+            baldosas.fila[i].columna[j]...   
+        }
+    }
+*/
+
 public class ManagerBaldosas : MonoBehaviour
 {
-    //Contiene todas las baldosas
-    public Baldosa[] baldosas;
-    //Script de selección
-    public Seleccion seleccion;
-    //Lista que contiene las baldosas seleccionadas para el combo
-    public List<Baldosa> baldosasSeleccionadas = new List<Baldosa>();
+    public Grid baldosas;
+    public LevelSettings levelSettings;
+    private float npcCount;
+    private int num;
 
-    //True si todas estan llenas de algun enemigo, pieza o player
-    public bool todasLlenas = true;
-
-    private Player player;
-    public LineRenderer linea;
-
-    private void Awake()
+    private int[] probabilities =
     {
-        player = FindObjectOfType<Player>();
+        3,3,3,3,3,3,3,3,3,3,
+        3,3,3,3,3,3,3,3,3,3,
+        3,3,3,3,3,3,3,3,3,3,
+        3,3,3,3,3,3,3,3,3,3,
+        3,3,3,3,3,3,3,3,3,3,
+        3,3,3,3,3,3,3,3,3,3,
+        3,3,3,3,3,3,3,3,3,3,
+        2,2,2,2,2,2,0,0,0,0,
+        0,2,2,2,2,2,1,1,1,1,
+        1,1,1,1,1,1,4,4,4,4,
+    };
+    private void Start()
+    {
+        GameEvents.current.onMapInstance += MapInstance;
+        GameEvents.current.MapInstanceEvent();
     }
 
-    private void Update()
+    public void MapInstance()
     {
-        //seleccion = 0 es el estado de seleccion, si la booleana seleccionada esta en true y la lista no contiene esa casilla se añade a la lista
-        if(seleccion.seleccion == 0 )
-        {
-            if (!player.modoJuego)
-            {
-                foreach (var item in baldosas)
-                {
-                    if (item.seleccionada && !baldosasSeleccionadas.Contains(item))
-                    {
-                        baldosasSeleccionadas.Add(item);
-
-                        if (linea != null)
-                        {
-                            if (linea.positionCount > 1)
-                            {
-                                linea.positionCount = baldosasSeleccionadas.ToArray().Length + 1;
-                                linea.SetPosition(baldosasSeleccionadas.ToArray().Length, new Vector3(baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.x, baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.y + 0.2f, baldosasSeleccionadas.ToArray()[baldosasSeleccionadas.ToArray().Length - 1].transform.position.z));
-                            }
-                            else if (linea.positionCount == 0)
-                            {
-                                linea.positionCount = 2;
-                                foreach (var baldosa in baldosas)
-                                {
-                                    if (baldosa.contienePlayer)
-                                        linea.SetPosition(0, new Vector3(baldosa.transform.position.x, baldosa.transform.position.y + 0.2f, baldosa.transform.position.z));
-                                }
-                                linea.SetPosition(1, new Vector3(baldosasSeleccionadas.ToArray()[0].transform.position.x, baldosasSeleccionadas.ToArray()[0].transform.position.y + 0.2f, baldosasSeleccionadas.ToArray()[0].transform.position.z));
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-
-            }
-           
-        }
-        //seleccion = 1, en este estado es el movimiento del player, y se resetean todas las booleanas a seleccionada = false
-        if(seleccion.seleccion == 1)
-        {
-            foreach (var item in baldosas)
-            {
-                item.seleccionada = false;
-            }
-        }
-    }
-
-    public void AsignarLinea(LineRenderer line)
-    {
-        linea = line;
-    }
-
-    //Función que llama el player para empezar la corrutina de llenar el tablero
-    public void ComprobarCasillas()
-    {
-        StartCoroutine(comprobar(0.0001f));
-    }
-
-    //Corrutina que llena el tablero
-    public IEnumerator comprobar(float time)
-    {
-        //Bucle que hasta que no esten todas llenas no sale
         do
         {
-            todasLlenas = true;
-            foreach (var item in baldosas)
+            for (int i = baldosas.fila.Length - 1; i >= 0; i--)
             {
-                //Si la casilla esta vacia y la de arriba no es un almacen
-                if (item.transform.childCount == 0 && item.upObject != null && item.upObject.transform.childCount > 0 && !item.contienePlayer && !item.upObject.name.Contains("Almacen"))
+                for (int j = 0; j < baldosas.fila[0].columna.Length; j++)
                 {
-                    todasLlenas = false;
-                    item.upObject.transform.GetChild(0).SetParent(item.transform);
-                    item.transform.GetChild(0).transform.localPosition = new Vector3(0, 0.5f, 0);
-                    item.color = item.transform.GetComponentInChildren<NPC>().color;
-                    yield return new WaitForSeconds(time);
-                }
-                //si la casilla esta vacia y la de arriba contiene el player
-                else if (item.transform.childCount == 0 && item.upObject != null)
-                {
-                    //si la de arriba no es un almacen
-                    if(item.upObject.upObject != null)
+                    do
                     {
-                        if (item.upObject.contienePlayer && !item.upObject.name.Contains("Almacen"))
+                        num = probabilities[Random.Range(0, probabilities.Length)];
+                        switch (num)
                         {
-                            todasLlenas = false;
-                            if (item.upObject.upObject != null)
-                            {
-                                if (item.upObject.upObject.transform.childCount > 0)
+                            case 0:
+                                if (levelSettings.realFlyCount < levelSettings.flyCount)
                                 {
-                                    item.upObject.upObject.transform.GetChild(0).transform.SetParent(item.upObject.transform);
-                                    item.upObject.transform.GetChild(0).transform.localPosition = new Vector3(0, 0.5f, 0);
-                                    item.upObject.color = item.upObject.transform.GetComponentInChildren<NPC>().color;
-                                    yield return new WaitForSeconds(time);
+                                    levelSettings.realFlyCount++;
+                                    baldosas.fila[i].columna[j].CambiarTipoEnemigo(TipoEnemigo.Mosca);
                                 }
-                            }
+                                else
+                                {
+                                    num = 5;
+                                }
+                                break;
+                            case 1:
+                                if (levelSettings.realOwlCount < levelSettings.owlCount)
+                                {
+                                    levelSettings.realOwlCount++;
+                                    baldosas.fila[i].columna[j].CambiarTipoEnemigo(TipoEnemigo.Buho);
+                                }
+                                else
+                                {
+                                    num = 5;
+                                }
+                                break;
+                            case 2:
+                                if (levelSettings.realToadCount < levelSettings.toadCount)
+                                {
+                                    levelSettings.realToadCount++;
+                                    baldosas.fila[i].columna[j].CambiarTipoEnemigo(TipoEnemigo.Sapo);
+                                }
+                                else
+                                {
+                                    num = 5;
+                                }
+                                break;
+                            case 3:
+                                if (levelSettings.realLeafCount < levelSettings.leafCount)
+                                {
+                                    levelSettings.realLeafCount++;
+                                    baldosas.fila[i].columna[j].CambiarTipoEnemigo(TipoEnemigo.Hoja);
+                                }
+                                else
+                                {
+                                    num = 5;
+                                }
+                                break;
+                            case 4:
+                                if (levelSettings.realColorFlowerCount < levelSettings.colorFlowerCount)
+                                {
+                                    levelSettings.realColorFlowerCount++;
+                                    baldosas.fila[i].columna[j].CambiarTipoEnemigo(TipoEnemigo.FlorBlanca);
+                                }
+                                else
+                                {
+                                    num = 5;
+                                }
+                                break;
                         }
-                    }
-                    //si la de arriba es un almacen
-                    else
-                    {
-                        if (item.transform.childCount == 0 && item.upObject.upObjectAlmacen != null )
-                        {
-                            if (!item.contienePlayer)
-                            {
-                                GameObject objeto = Instantiate(item.upObject.upObjectAlmacen.Almacen[0].gameObject);
-                                item.upObject.upObjectAlmacen.Almacen.RemoveAt(0);
-                                objeto.transform.SetParent(item.transform);
-                                objeto.transform.localPosition = new Vector3(0, 0.5f, 0);
-                                item.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, -90);
-                                objeto.transform.localScale = new Vector3(10, 10, 30);
-                                item.transform.GetChild(0).transform.localPosition = new Vector3(0, 0.5f, 0);
-                                item.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, -90);
-                                item.color = item.transform.GetComponentInChildren<NPC>().color;
-                                yield return new WaitForSeconds(time);
-                            }
-                        }
-                    }
-                }
-                //Penultima linea de arriba
-                else if (item.transform.childCount == 0 && item.upObject == null  && item.upObjectAlmacen != null)
-                {
-                    if (!item.contienePlayer)
-                    {
-                        GameObject objeto = Instantiate(item.upObjectAlmacen.Almacen[0].gameObject);
-                        item.upObjectAlmacen.Almacen.RemoveAt(0);
-                        objeto.transform.SetParent(item.transform);
-                        objeto.transform.localPosition = new Vector3(0, 0.5f, 0);
-                        item.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, -90);
-                        objeto.transform.localScale = new Vector3(10, 10, 30);
-                        item.transform.GetChild(0).transform.localPosition = new Vector3(0, 0.5f, 0);
-                        item.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, -90);
-                        item.color = item.transform.GetComponentInChildren<NPC>().color;
-                        yield return new WaitForSeconds(time);
-                    }
+                    } while (num < 0 || num >= 5);
+                    npcCount++;
                 }
             }
-        }
-        while (!todasLlenas);
+        } while (npcCount < 77);
+        print("Ha acabado");
     }
-
-
 }
